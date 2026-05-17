@@ -1,0 +1,142 @@
+/* --- EMBEDDED Base & Responsive CSS --- */
+        body { font-family: Arial, sans-serif; background: #f7f7f7; margin: 0; color: #333; line-height: 1.6; }
+        * { box-sizing: border-box; }
+        .page-content { max-width: 1400px; width: 95%; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); }
+
+        /* --- Navbar --- */
+        .header-bar { background-color: #ffc72c; display: flex; align-items: stretch; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-height: 60px; position: relative; }
+        .logo-container { background-color: #fff; display: flex; align-items: center; padding: 0 15px; min-width: 180px; flex-shrink: 0; }
+        .logo-container h1 { color: #ffc72c; font-size: 24px; margin: 0; white-space: nowrap; }
+        .logo-container h1 span { color: #c0392b; }
+        .navbar { flex-grow: 1; display: flex; align-items: stretch; padding: 0 10px; }
+        .main-nav { display: flex; align-items: stretch; width: 100%; }
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 15px; color: #333; margin-left: auto; align-self: center; }
+        .navbar a { color: #333; text-align: center; padding: 0 12px; text-decoration: none; font-size: 16px; display: flex; align-items: center; font-weight: bold; transition: background-color 0.3s; white-space: nowrap; border: none; background: none; }
+        .navbar a:hover:not(.logout-link) { background-color: rgba(0, 0, 0, 0.05); }
+        .navbar a.active { background-color: #fff; color: #333; }
+        .logout-link { margin-left: auto; background-color: #c0392b; color: white !important; padding: 0 15px; border-radius: 4px; align-self: center; height: 38px; line-height: 38px; font-weight: bold; font-size: 16px; text-decoration: none; }
+        .logout-link:hover { background-color: #e74c3c; }
+
+        /* --- Headings & Messages --- */
+        h1, h2, h3 { color: #333; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 25px; margin-bottom: 15px; }
+        h1 { font-size: 1.8em; text-align: center; } h2 { font-size: 1.5em; } h3 { font-size: 1.2em; }
+        .message { padding: 12px 15px; margin: 15px 0; border-radius: 5px; border: 1px solid transparent; }
+        .message.success { background: #dff0d8; border-color: #d6e9c6; color: #3c763d; }
+        .message.error { background: #f2dede; border-color: #ebccd1; color: #a94442; }
+        .message.info { background: #d9edf7; border-color: #bce8f1; color: #31708f;}
+        .message a { color: inherit; text-decoration: underline; }
+
+        /* --- Table Styles --- */
+        .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 30px;}
+        table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin-bottom: 20px;}
+        table, th, td { border: 1px solid #ccc; }
+        th, td { padding: 8px 10px; text-align: left; vertical-align: top; }
+        th { background-color: #f2a154; color: white; text-transform: uppercase; white-space: nowrap; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .btn { padding: 5px 10px; color: white !important; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; display: inline-block; text-align: center; margin: 2px; font-size: 0.9em; }
+        .btn:hover { opacity: 0.9; }
+        .btn-approve { background-color: #5F8B4C; color: white; border: none; }
+        .btn-approve:hover { background-color: #4d7a3c; }
+        .btn-deny { background-color: #800000; color: white; border: none; }
+        .btn-deny:hover { background-color: #6b0000; }
+        button[name='delete_account'] { background: #800000; color: white; border: none; }
+        button[name='delete_account']:hover { background: #6b0000; }
+        button[name='update_account'] { background: #007bff; color: white; border: none;}
+        button[name='update_account']:hover { background: #0056b3; }
+
+        /* --- Form Styles --- */
+        input, select, button { padding: 8px; margin: 4px 2px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 0.9em; }
+        button { cursor: pointer; }
+        .add-account-form { border: 1px solid #eee; padding: 20px; border-radius: 6px; background: #f9f9f9; margin-bottom: 30px; }
+        .add-account-form label { display: block; margin: 10px 0 3px; font-weight: bold; }
+        .add-account-form .input-wrapper { position: relative; width: 100%; }
+        .add-account-form .input-wrapper .required-indicator { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #c0392b; font-weight: bold; pointer-events: none; }
+        .add-account-form input, .add-account-form select { width: 100%; }
+        .add-account-form input.required-field, .add-account-form select.required-field { padding-right: 25px; }
+        .add-account-form button { background: #5F8B4C; color: white; border: none; margin-top: 15px; padding: 10px 15px; font-weight: bold; }
+        .add-account-form button:hover { background: #4d7a3c; }
+
+        /* Styles for update fields within the table */
+        .update-form-fields { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+        .update-form-fields input, .update-form-fields select { width: auto; flex-grow: 1; min-width: 100px; }
+        .update-form-fields input[name='password'] { min-width: 120px; }
+        .update-form-fields button { flex-shrink: 0; }
+        .action-cell { min-width: 300px; }
+        .action-buttons { display: flex; gap: 5px; justify-content: flex-end; margin-top: 5px; }
+
+        /* --- Modal Styles --- */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 30px; border: 1px solid #888; border-radius: 8px; width: 90%; max-width: 600px; position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; line-height: 20px; cursor: pointer; }
+        .close-modal:hover, .close-modal:focus { color: #000; text-decoration: none; }
+        .modal-content h3 { margin-top: 0; border-bottom: 2px solid #ffc72c; padding-bottom: 10px; }
+        
+        /* Confirmation Modal Styles */
+        .confirm-modal .modal-content { max-width: 400px; text-align: center; }
+        .confirm-modal .modal-content h3 { border-bottom: none; margin-bottom: 20px; }
+        .confirm-modal .modal-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 25px; }
+        .confirm-modal .modal-buttons button { min-width: 100px; padding: 10px 20px; font-size: 1em; font-weight: bold; border-radius: 5px; cursor: pointer; border: none; }
+        .confirm-modal .btn-yes { background-color: #5F8B4C; color: white; }
+        .confirm-modal .btn-yes:hover { background-color: #4d7a3c; }
+        .confirm-modal .btn-no { background-color: #6c757d; color: white; }
+        .confirm-modal .btn-no:hover { background-color: #5a6268; }
+        
+        @media (max-width: 768px) {
+            .modal-content { width: 95%; margin: 10% auto; padding: 20px; }
+        }
+        
+        @media (max-width: 480px) {
+            .modal-content { width: 98%; margin: 15% auto; padding: 15px; }
+        }
+
+        /* ****** RESPONSIVE ADJUSTMENTS ****** */
+         @media (max-width: 1200px) {
+             table { min-width: 900px; }
+             .update-form-fields { flex-direction: column; align-items: stretch; }
+             .update-form-fields input, .update-form-fields select, .update-form-fields button { width: 100%; margin-bottom: 5px; }
+             .action-cell { min-width: 200px; white-space: normal; }
+         }
+
+         @media (max-width: 992px) {
+            .page-content { width: 98%; padding: 15px; }
+            .navbar a { font-size: 15px; padding: 0 8px; }
+            h1 { font-size: 1.6em; } h2 { font-size: 1.4em; }
+            th, td { padding: 6px 8px; font-size: 0.85em; }
+            .logout-link { font-size: 15px; padding: 0 10px; }
+            .add-account-form input, .add-account-form select { font-size: 0.9em; }
+            table { min-width: 800px; }
+         }
+
+        @media (max-width: 768px) {
+            .header-bar { flex-wrap: nowrap; }
+             .navbar { position: relative; justify-content: space-between; }
+             .hamburger { display: block; }
+             .logout-link { display: none; }
+             .main-nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background-color: #ffda63; box-shadow: 0 4px 8px rgba(0,0,0,0.1); flex-direction: column; width: 100%; z-index: 100; border-top: 1px solid rgba(0,0,0,0.1); }
+             .main-nav.show-menu { display: flex; }
+             .main-nav a { width: 100%; text-align: left; padding: 12px 20px; border-bottom: 1px solid rgba(0, 0, 0, 0.05); height: auto; min-height: 44px; }
+             .main-nav a:last-child { border-bottom: none; }
+             .main-nav a.active { background-color: rgba(255, 255, 255, 0.8); }
+             .main-nav a.logout-link { background-color: #c0392b !important; color: white !important; margin-left: 0; border-radius: 0; align-self: stretch; height: auto; min-height: 44px; line-height: initial; padding: 12px 20px; border-bottom: none; font-weight: bold; }
+             .main-nav a.logout-link:hover { background-color: #e74c3c !important; }
+
+             h1 { font-size: 1.4em; } h2 { font-size: 1.2em; }
+             th, td { padding: 6px; font-size: 0.8em; }
+             .add-account-form { padding: 15px; }
+             table { min-width: 600px; }
+         }
+
+         @media (max-width: 480px) {
+             body { padding: 0; }
+             .page-content { width: 100%; margin: 10px 0 0 0; padding: 10px; border-radius: 0; box-shadow: none; }
+             .logo-container { min-width: 140px; padding: 0 10px;}
+             .logo-container h1 { font-size: 20px; }
+             h1 { font-size: 1.3em; }
+             .navbar a { padding: 0 8px;}
+             .hamburger { padding: 0 10px;}
+             th, td { padding: 5px; font-size: 0.75em; }
+             .add-account-form { padding: 10px; }
+             button, .btn { font-size: 0.85em; padding: 6px 10px;}
+             table { min-width: 500px; }
+             .action-cell { min-width: 150px; }
+         }

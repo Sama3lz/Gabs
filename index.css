@@ -1,0 +1,136 @@
+/* Base and responsive CSS for Login page */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ffbb00 50%, #ffffff 50%);
+    background-size: cover;
+}
+
+.login-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    z-index: 10;
+}
+
+.logo {
+    margin-bottom: 25px;
+}
+
+.logo img {
+    max-width: 130px;
+    height: auto;
+}
+
+h2 {
+    font-size: 1.6em;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 18px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.input-group input[type="text"],
+.input-group input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+    border-color: #f2a154;
+    outline: none;
+}
+
+.error-message {
+    color: #c0392b;
+    margin-bottom: 15px;
+    text-align: center;
+    background-color: #f8d7da;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+    font-size: 0.95em;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #f2a154;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    background-color: #e09245;
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 40px;
+    }
+
+    .login-box {
+        padding: 20px;
+        max-width: 95%;
+        margin-top: 0;
+    }
+
+    h2 {
+        font-size: 1.4em;
+        margin-bottom: 20px;
+    }
+
+    .logo img {
+        max-width: 100px;
+    }
+
+    .input-group input[type="text"],
+    .input-group input[type="password"] {
+        padding: 10px 12px;
+        font-size: 0.95em;
+    }
+
+    .login-btn {
+        padding: 10px 12px;
+        font-size: 1em;
+    }
+
+    .error-message {
+        font-size: 0.9em;
+        padding: 8px 10px;
+    }
+}

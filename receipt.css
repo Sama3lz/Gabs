@@ -1,0 +1,257 @@
+/* --- EMBEDDED Base & Responsive CSS (Copied from ingredienthistory.php) --- */
+        body { font-family: Arial, sans-serif; background: #f7f7f7; margin: 0; color: #333; line-height: 1.6; }
+        * { box-sizing: border-box; }
+        .page-content { max-width: 1400px; /* Consistent width */ width: 95%; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); }
+
+        /* --- Navbar --- */
+        .header-bar { background-color: #ffc72c; /* Theme Yellow */ display: flex; align-items: stretch; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-height: 60px; position: relative; }
+        .logo-container { background-color: #fff; display: flex; align-items: center; padding: 0 15px; min-width: 180px; flex-shrink: 0; }
+        .logo-container h1 { color: #ffc72c; font-size: 24px; margin: 0; white-space: nowrap; }
+        .logo-container h1 span { color: #c0392b; }
+        .navbar { flex-grow: 1; display: flex; align-items: stretch; padding: 0 10px; }
+        .main-nav { display: flex; align-items: stretch; width: 100%; }
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 15px; color: #333; margin-left: auto; align-self: center; }
+        .navbar a { color: #333; text-align: center; padding: 0 12px; text-decoration: none; font-size: 16px; display: flex; align-items: center; font-weight: bold; transition: background-color 0.3s; white-space: nowrap; border: none; background: none; }
+        .navbar a:hover:not(.logout-link) { background-color: rgba(0, 0, 0, 0.05); }
+        .navbar a.active { background-color: #fff; color: #333; }
+        .logout-link { margin-left: auto; background-color: #c0392b; color: white !important; padding: 0 15px; border-radius: 4px; align-self: center; height: 38px; line-height: 38px; font-weight: bold; font-size: 16px; text-decoration: none; }
+        .logout-link:hover { background-color: #e74c3c; }
+
+        /* --- Headings & Messages --- */
+        h1, h2, h3 { color: #333; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 25px; margin-bottom: 15px; }
+        h1 { font-size: 1.8em; text-align: center; } h2 { font-size: 1.5em; } h3 { font-size: 1.2em; }
+        .message { padding: 12px 15px; margin: 15px 0; border-radius: 5px; border: 1px solid transparent; }
+        .message.success { background: #dff0d8; border-color: #d6e9c6; color: #3c763d; }
+        .message.error { background: #f2dede; border-color: #ebccd1; color: #a94442; }
+        .message.info { background: #d9edf7; border-color: #bce8f1; color: #31708f;}
+        .message a { color: inherit; text-decoration: underline; }
+
+        /* --- Sub-Navigation (Copied) --- */
+         .sub-nav { margin-bottom: 25px; border-bottom: 2px solid #ccc; padding-bottom: 5px; display: flex; flex-wrap: wrap; gap: 5px;}
+         .sub-nav a { display: inline-block; padding: 10px 15px; text-decoration: none; color: #333; font-weight: bold; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+         .sub-nav a.active-tab { border-bottom-color: #f2a154; color: #f2a154; }
+
+        /* --- Table Styles (Generic, can be reused) --- */
+        .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 30px;} /* For responsive tables */
+        table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin-bottom: 20px;}
+        table, th, td { border: 1px solid #ccc; }
+        th, td { padding: 8px 10px; text-align: left; vertical-align: middle; }
+        th { background-color: #f2a154; color: white; text-transform: uppercase; white-space: nowrap; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .btn { /* General button styling */
+            padding: 8px 12px; color: white !important; text-decoration: none;
+            border-radius: 4px; border: none; cursor: pointer; font-weight: bold;
+            display: inline-block; text-align: center;
+        }
+        .btn:hover { opacity: 0.9; }
+
+        /* --- Receipt Detail Specific Styles --- */
+        .receipt-detail { border: 1px solid #ddd; padding: 25px; background: #fff; border-radius: 8px; margin-top: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .receipt-detail h2 { margin-top: 0; border-bottom: 2px solid #f2a154; padding-bottom: 10px; color: #333; text-align: center; } /* Centered main title */
+        .receipt-detail p { margin: 8px 0; line-height: 1.7; color: #555; }
+        .receipt-detail strong { display: inline-block; width: 130px; color: #333;} /* Align labels */
+        
+        /* ** NEW: Side-by-side Table Layout ** */
+        .tables-layout {
+            display: flex;
+            flex-wrap: wrap; /* Stacks on mobile */
+            gap: 25px; /* Space between tables */
+            margin-top: 20px;
+        }
+        .public-table-block {
+            flex: 3 1 400px; /* Grow 3x, base 400px */
+            min-width: 300px;
+        }
+        .admin-table-block {
+            flex: 2 1 300px; /* Grow 2x, base 300px */
+            min-width: 280px;
+        }
+        .tables-layout h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        /* ** END: Side-by-side Table Layout ** */
+
+        .receipt-detail table { margin-top: 15px; font-size: 1em; } /* Reduced top margin as h3 has margin */
+        .receipt-detail th { background-color: #f8f8f8; color: #333; text-align: center;}
+        .receipt-detail td { text-align: center; } /* Center table data */
+        .receipt-detail tbody td:first-child { text-align: left;} /* Left align product name */
+        
+        .receipt-detail tfoot td { font-weight: bold; background-color: #f0f0f0; text-align: right; }
+        /* This rule specifically targets the *text* cell for grand total, not the *value* cell */
+        .receipt-detail tfoot td:not(:last-child) { text-align: right; }
+        
+        .receipt-actions { margin-top: 25px; padding-top: 20px; border-top: 1px dashed #ccc; text-align: right; } /* Align buttons right */
+        .receipt-actions .btn { margin-left: 10px; } /* Space buttons */
+        .proof-image img {
+            max-width: 350px; max-height: 450px; display: block;
+            margin: 20px auto; border: 1px solid #ddd; padding: 5px;
+            background: #f9f9f9; border-radius: 4px;
+        }
+
+        /* ** NEW: Style for admin-only columns ** */
+        .admin-only-col {
+            background-color: #fafafa !important;
+            border-left: 1px dashed #ddd !important;
+        }
+        /* Make sure it overrides alternating rows */
+        tr:nth-child(even) .admin-only-col {
+             background-color: #f8f8f8 !important;
+        }
+        tfoot .admin-only-col {
+            background-color: #f0f0f0 !important;
+        }
+
+
+        /* --- Archive View Specific Styles --- */
+        .archive-table th { white-space: nowrap; }
+        .archive-table td { text-align: left; } /* Align archive data left */
+        .archive-table td:first-child, /* Center IDs */
+        .archive-table td:nth-child(4), /* Center Amount */
+        .archive-table td:last-child { /* Center Action */
+            text-align: center;
+        }
+        .archive-table .action-cell { text-align: center; }
+
+        /* --- NEW: Pagination Styles --- */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        .pagination a, .pagination span {
+            display: inline-block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .pagination a:hover {
+            background-color: #e9e9e9;
+        }
+        .pagination .current {
+            background-color: #f2a154;
+            color: white;
+            border-color: #f2a154;
+        }
+        .pagination .disabled {
+            background-color: #f9f9f9;
+            color: #aaa;
+            border-color: #ddd;
+            cursor: not-allowed;
+        }
+
+        /* --- NEW: Filter Form Styles --- */
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .filter-form div {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .filter-form label {
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #333;
+        }
+        .filter-form input[type="date"] {
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 38px; /* Match buttons */
+        }
+        .filter-form .btn {
+            height: 38px;
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+
+        /* ****** RESPONSIVE ADJUSTMENTS ****** */
+         @media (max-width: 992px) { /* Medium screens / Tablets */
+             .page-content { width: 98%; padding: 15px; }
+             .navbar a { font-size: 15px; padding: 0 8px; }
+             h1 { font-size: 1.6em; } h2 { font-size: 1.4em; }
+             th, td { padding: 6px 8px; font-size: 0.85em; }
+             .logout-link { font-size: 15px; padding: 0 10px; }
+             .sub-nav a { padding: 8px 10px; font-size: 0.95em; }
+             .receipt-detail strong { width: 110px; }
+         }
+
+        @media (max-width: 768px) { /* Small screens / Mobile */
+             .header-bar { flex-wrap: nowrap; }
+              .navbar { position: relative; justify-content: space-between; }
+              .hamburger { display: block; }
+              .logout-link { display: none; }
+              .main-nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background-color: #ffda63; box-shadow: 0 4px 8px rgba(0,0,0,0.1); flex-direction: column; width: 100%; z-index: 100; border-top: 1px solid rgba(0,0,0,0.1); }
+              .main-nav.show-menu { display: flex; }
+              .main-nav a { width: 100%; text-align: left; padding: 12px 20px; border-bottom: 1px solid rgba(0, 0, 0, 0.05); height: auto; min-height: 44px; }
+              .main-nav a:last-child { border-bottom: none; }
+              .main-nav a.active { background-color: rgba(255, 255, 255, 0.8); }
+              .main-nav a.logout-link { display:flex !important; background-color: #c0392b !important; color: white !important; margin-left: 0; border-radius: 0; align-self: stretch; height: auto; min-height: 44px; line-height: initial; padding: 12px 20px; border-bottom: none; font-weight: bold; }
+              .main-nav a.logout-link:hover { background-color: #e74c3c !important; }
+
+              h1 { font-size: 1.4em; } h2 { font-size: 1.2em; }
+              .sub-nav { justify-content: center;}
+              th, td { padding: 6px; font-size: 0.8em; }
+              .receipt-detail strong { width: auto; display: block; margin-bottom: 3px;} /* Stack labels */
+              .receipt-detail p { margin-bottom: 10px; }
+              .receipt-actions { text-align: center; }
+              .receipt-actions .btn { display: block; margin: 10px 0; } /* Stack buttons */
+         }
+
+         @media (max-width: 480px) { /* Extra small screens */
+              body { padding: 0; }
+              .page-content { width: 100%; margin: 10px 0 0 0; padding: 10px; border-radius: 0; box-shadow: none; }
+              .logo-container { min-width: 140px; padding: 0 10px;}
+              .logo-container h1 { font-size: 20px; }
+              h1 { font-size: 1.3em; }
+              .navbar a { padding: 0 8px;}
+              .hamburger { padding: 0 10px;}
+              th, td { padding: 5px; font-size: 0.75em; }
+              .sub-nav a { padding: 8px; font-size: 0.9em;}
+              .proof-image img { max-width: 90%; }
+         }
+
+        /* --- NEW: PDF Loader Styles --- */
+        .loader-overlay {
+            display: none; /* Hide by default */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 9998;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .loader-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #f2a154; /* Theme color */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        .loader-overlay p {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }

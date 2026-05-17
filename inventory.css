@@ -1,0 +1,94 @@
+body { font-family: Arial, sans-serif; background: #f7f7f7; margin: 0; color: #333; line-height: 1.6; }
+        * { box-sizing: border-box; }
+        .page-content { max-width: 1400px; width: 95%; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); }
+
+        /* Modal Styles */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; }
+        .modal-overlay.active { display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 8px; max-width: 400px; width: 90%; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .modal-content h3 { margin: 0 0 20px 0; font-size: 1.3em; text-align: center; color: #333; border: none; padding: 0; }
+        .modal-content p { text-align: center; margin-bottom: 25px; color: #666; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: center; }
+        .modal-buttons button { padding: 10px 30px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1em; }
+        .modal-buttons .btn-yes { background-color: #5F8B4C; color: white; }
+        .modal-buttons .btn-yes:hover { background-color: #4d7a3c; }
+        .modal-buttons .btn-no { background-color: #6c757d; color: white; }
+        .modal-buttons .btn-no:hover { background-color: #5a6268; }
+
+        .header-bar { background-color: #ffc72c; display: flex; align-items: stretch; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-height: 60px; position: relative; }
+        .logo-container { background-color: #fff; display: flex; align-items: center; padding: 0 15px; min-width: 180px; flex-shrink: 0; }
+        .logo-container h1 { color: #ffc72c; font-size: 24px; margin: 0; white-space: nowrap; }
+        .logo-container h1 span { color: #c0392b; }
+        .navbar { flex-grow: 1; display: flex; align-items: stretch; padding: 0 10px; }
+        .main-nav { display: flex; align-items: stretch; width: 100%; }
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 15px; color: #333; margin-left: auto; align-self: center; }
+        .navbar a { color: #333; text-align: center; padding: 0 12px; text-decoration: none; font-size: 16px; display: flex; align-items: center; font-weight: bold; transition: background-color 0.3s; white-space: nowrap; }
+        .navbar a:hover:not(.logout-link) { background-color: rgba(0, 0, 0, 0.05); }
+        .navbar a.active { background-color: #fff; color: #333; }
+        .logout-link { margin-left: auto; background-color: #c0392b; color: white !important; padding: 0 15px; border-radius: 4px; align-self: center; height: 38px; line-height: 38px; font-weight: bold; font-size: 16px; text-decoration: none; }
+        .logout-link:hover { background-color: #e74c3c; }
+
+        h1, h2, h3 { color: #333; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 25px; margin-bottom: 15px; }
+        h1 { font-size: 1.8em; } h2 { font-size: 1.5em; } h3 { font-size: 1.2em; }
+        .message { padding: 12px 15px; margin: 15px 0; border-radius: 5px; border: 1px solid transparent; }
+        .message.success { background: #dff0d8; border-color: #d6e9c6; color: #3c763d; }
+        .message.error { background: #f2dede; border-color: #ebccd1; color: #a94442; }
+
+        .sub-nav { margin-bottom: 20px; border-bottom: 2px solid #ccc; padding-bottom: 5px;}
+        .sub-nav a { display: inline-block; padding: 10px 15px; text-decoration: none; color: #333; font-weight: bold; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+        .sub-nav a.active-tab { border-bottom-color: #f2a154; color: #f2a154; }
+
+        .add-ingredient-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-bottom: 25px; padding: 15px; background: #f9f9f9; border: 1px solid #eee; border-radius: 6px; }
+        .add-ingredient-form > div { flex: 1 1 180px; display: flex; flex-direction: column; }
+        .add-ingredient-form label { font-weight: bold; margin-bottom: 5px; font-size: 0.9em; }
+        .add-ingredient-form input, .add-ingredient-form select { padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; }
+        .add-ingredient-form button { padding: 8px 15px; background-color: #5F8B4C; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; height: 37px; }
+        .add-ingredient-form button:hover { background-color: #4d7a3c; }
+
+        .search-export-bar { margin-bottom: 20px; padding: 15px; background: #f9f9f9; border: 1px solid #eee; border-radius: 6px; display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+        .search-export-bar > div { flex-grow: 1; min-width: 200px; }
+        .search-export-bar label { font-weight: bold; margin-bottom: 5px; font-size: 0.9em; display: block; }
+        .search-export-bar input[type="text"] { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .search-export-bar button, .search-export-bar a.btn { padding: 8px 15px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; height: 37px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+        .search-export-bar button { background-color: #f2a154; }
+        .search-export-bar button:hover { background-color: #e08a2e; }
+        .search-export-bar a.btn-reset { background-color: #6c757d; }
+        .search-export-bar a.btn-reset:hover { background-color: #5a6268; }
+        .search-export-bar a.btn-export { background-color: #28a745; }
+        .search-export-bar a.btn-export:hover { background-color: #218838; }
+
+        .filter-nav { margin-bottom: 20px; padding: 10px 0; border-bottom: 1px solid #eee;}
+        .filter-nav h3 { border: none; margin: 0 0 10px 0; padding: 0; font-size: 1.1em;}
+        .filter-nav label { margin-right: 20px; cursor: pointer; }
+
+        .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px;}
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        table, th, td { border: 1px solid #ccc; }
+        th, td { padding: 10px 12px; text-align: center; vertical-align: middle; }
+        th { background-color: #f2a154; color: white; white-space: nowrap; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        td:first-child { text-align: left; }
+
+        .action-cell { min-width: 220px; }
+        .action-cell input[type="number"] { width: calc(100% - 90px); padding: 6px 8px; margin-right: 5px; }
+        .action-cell button { width: 80px; padding: 6px 10px; font-size: 0.9em; border: none; color: white; cursor: pointer; border-radius: 3px; font-weight: bold;}
+        button[name='delete_ingredient'] { background-color: #800000; }
+        button[name='delete_ingredient']:hover { background-color: #6b0000; }
+        button[name='update_ingredient'] { background-color: #007bff; }
+        button[name='update_ingredient']:hover { background-color: #0056b3; }
+
+        @media (max-width: 768px) {
+            .header-bar { flex-wrap: nowrap; }
+            .navbar { position: relative; }
+            .hamburger { display: block; }
+            .logout-link { display: none; }
+            .main-nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background-color: #ffda63; flex-direction: column; width: 100%; z-index: 100; }
+            .main-nav.show-menu { display: flex; }
+            .main-nav a { width: 100%; padding: 12px 20px; }
+            .main-nav a.logout-link { display:flex !important; background-color: #c0392b !important; margin-left: 0; border-radius: 0; }
+            
+            .add-ingredient-form { flex-direction: column; }
+            .add-ingredient-form button { width: 100%; }
+            .search-export-bar { flex-direction: column; }
+            .search-export-bar button, .search-export-bar a.btn { width: 100%; }
+        }
