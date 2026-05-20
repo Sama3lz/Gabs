@@ -27,12 +27,7 @@ if (isset($_SESSION['message'])) {
 $page_title = "Dashboard - Gab's Bakeshop";
 $current_page = basename($_SERVER['PHP_SELF']); // For navbar active state
 
-$nav = get_nav_permissions($user_role);
-$show_inventory_link = $nav['show_inventory_link'];
-$show_reports_link = $nav['show_reports_link'];
-$show_accounts_link = $nav['show_accounts_link'];
-$show_orders_link = $nav['show_orders_link'];
-$show_settings_link = $nav['show_settings_link'];
+apply_nav_permissions($user_role);
 
 ?>
 <!DOCTYPE html>
@@ -45,52 +40,9 @@ $show_settings_link = $nav['show_settings_link'];
 </head>
 <body>
     <!-- ****** EMBEDDED Navbar HTML (Copied from orders.php) ****** -->
-    <?php include __DIR__ . '/includes/navbar.php'; ?>
-
-<div class="page-content">
-        <div class="dashboard-content">
-            <h1>Welcome to Gab's Bakeshop System</h1>
-            <p class="user-info">
-                Logged in as: <strong><?= htmlspecialchars($user_name); ?></strong>
-                (Role: <?= htmlspecialchars($user_role ?? 'Unknown') ?>)
-            </p>
-
-            <?php
-                // Display messages if any
-                 if (!empty($msg) && strpos($msg, '<div') === false) { echo "<div class='message success'>" . htmlspecialchars($msg) . "</div>"; } elseif (!empty($msg)) { echo $msg; }
-                 if (!empty($error) && strpos($error, '<div') === false) { echo "<div class='message error'>" . htmlspecialchars($error) . "</div>"; } elseif (!empty($error)) { echo $error; }
-            ?>
-
-            <div class="welcome-card">
-                <h2>System Overview</h2>
-                <p>Welcome! Use the navigation bar above to access different sections based on your role.</p>
-                <hr>
-                <p style="font-style: italic; color: #555;">
-                <?php
-                if ($user_role === 'Admin') { echo "As an <b>Admin</b>, you have full access to manage inventory, approve/deny orders, generate reports, handle user accounts, and configure system settings."; }
-                elseif ($user_role === 'Moderator') { echo "As a <b>Moderator</b>, you can manage inventory, approve or deny pending orders, and view various system reports."; }
-                elseif ($user_role === 'Branch') { echo "As a <b>Branch</b> user, you can view product inventory, place new orders for your branch, and view sales reports specific to your location."; }
-                elseif ($user_role === 'Delivery') { echo "As a <b>Delivery</b> user, you can view approved orders assigned to you and mark them as delivered after uploading proof."; }
-                else { echo "Navigate using the links above to begin managing the system based on your assigned permissions."; }
-                ?>
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ****** EMBEDDED JavaScript for Hamburger Menu ****** -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const hamburgerButton = document.getElementById('hamburger-button');
-            const navLinks = document.getElementById('main-nav-links');
-
-            if (hamburgerButton && navLinks) {
-                hamburgerButton.addEventListener('click', function() {
-                    navLinks.classList.toggle('show-menu');
-                });
-            }
-        });
-    </script>
+    <?php include_role_navbar(); ?>
+    <?php include_role_view('welcome'); ?>
+    <?php include_hamburger_script(); ?>
 
 </body>
 </html>

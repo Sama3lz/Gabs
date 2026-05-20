@@ -27,12 +27,7 @@ if (isset($_SESSION['message'])) {
 $page_title = "Ingredient Audit Report - Gab's Bakeshop";
 $current_page = basename($_SERVER['PHP_SELF']);
 
-$nav = get_nav_permissions($user_role);
-$show_inventory_link = $nav['show_inventory_link'];
-$show_reports_link = $nav['show_reports_link'];
-$show_accounts_link = $nav['show_accounts_link'];
-$show_orders_link = $nav['show_orders_link'];
-$show_settings_link = $nav['show_settings_link'];
+apply_nav_permissions($user_role);
 
 
 // --- SECURE DATE FILTER LOGIC ---
@@ -171,7 +166,7 @@ function format_stock_display($value, $type) {
 </head>
 <body>
     <!-- ****** EMBEDDED Navbar HTML ****** -->
-    <?php include __DIR__ . '/includes/navbar.php'; ?>
+    <?php include_role_navbar(); ?>
 
 <div class="page-content">
         <h1>System Reports Dashboard</h1>

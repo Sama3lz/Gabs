@@ -197,12 +197,7 @@ $current_page = basename($_SERVER['PHP_SELF']); // For active navbar link
 
 // --- Page Variables & Navbar Logic ---
 $page_title = "Manage Orders - Gab's Bakeshop";
-$nav = get_nav_permissions($user_role);
-$show_inventory_link = $nav['show_inventory_link'];
-$show_reports_link = $nav['show_reports_link'];
-$show_accounts_link = $nav['show_accounts_link'];
-$show_orders_link = $nav['show_orders_link'];
-$show_settings_link = $nav['show_settings_link'];
+apply_nav_permissions($user_role);
 
 // --- NOTIFICATION & ERROR HANDLING ---
 $message = ''; // For success/error messages
@@ -251,7 +246,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($conn)) {
             $stmt->close();
             
             $conn->commit();
-            $_SESSION['message'] = "<div class='message success'>✅ Batch order placed successfully!</div>";
+            $_SESSION['message'] = "<div class='message success'>âœ… Batch order placed successfully!</div>";
             header("Location: orders.php");
             exit();
         }
@@ -318,7 +313,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($conn)) {
 
             $conn->commit();
             error_log("Order #$order_ID approved successfully");
-            $_SESSION['message'] = "<div class='message success'>✅ Order #{$order_ID} approved and stock updated.</div>";
+            $_SESSION['message'] = "<div class='message success'>âœ… Order #{$order_ID} approved and stock updated.</div>";
             header("Location: orders.php");
             exit();
         }
@@ -437,7 +432,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($conn)) {
 
             $conn->commit();
             error_log("Batch approved successfully");
-            $_SESSION['message'] = "<div class='message success'>✅ Batch approved and all stocks updated.</div>";
+            $_SESSION['message'] = "<div class='message success'>âœ… Batch approved and all stocks updated.</div>";
             header("Location: orders.php");
             exit();
         }
@@ -502,7 +497,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($conn)) {
             }
 
             $conn->commit();
-            $_SESSION['message'] = "<div class='message success'>✅ Batch marked as delivered.</div>";
+            $_SESSION['message'] = "<div class='message success'>âœ… Batch marked as delivered.</div>";
             header("Location: orders.php");
             exit();
         }
@@ -535,7 +530,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($conn)) {
 
             $conn->commit();
             error_log("Order #$order_ID denied successfully");
-            $_SESSION['message'] = "<div class='message success'>✅ Order #{$order_ID} has been denied.</div>";
+            $_SESSION['message'] = "<div class='message success'>âœ… Order #{$order_ID} has been denied.</div>";
             header("Location: orders.php");
             exit();
         }
@@ -565,7 +560,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($conn)) {
 
             $conn->commit();
             error_log("Batch denied, $affected_rows orders updated");
-            $_SESSION['message'] = "<div class='message success'>✅ All pending items in the batch have been denied.</div>";
+            $_SESSION['message'] = "<div class='message success'>âœ… All pending items in the batch have been denied.</div>";
             header("Location: orders.php");
             exit();
         }
@@ -599,7 +594,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($conn)) {
 
             $conn->commit();
             error_log("Batch cancelled, $affected_rows orders updated");
-            $_SESSION['message'] = "<div class='message success'>✅ Your batch order has been cancelled.</div>";
+            $_SESSION['message'] = "<div class='message success'>âœ… Your batch order has been cancelled.</div>";
             header("Location: orders.php");
             exit();
         }
@@ -612,7 +607,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($conn)) {
         $conn->rollback();
         error_log("ERROR in orders.php: " . $e->getMessage());
         error_log("Stack trace: " . $e->getTraceAsString());
-        $_SESSION['message'] = "<div class='message error'>❌ " . $e->getMessage() . "</div>";
+        $_SESSION['message'] = "<div class='message error'>âŒ " . $e->getMessage() . "</div>";
         header("Location: orders.php");
         exit();
     }
@@ -738,7 +733,7 @@ function handleProofUpload($file, $branch_id, $order_date) {
         }
     } catch (Exception $e) {
         error_log("Upload error: " . $e->getMessage());
-        $_SESSION['message'] = "<div class='message error'>❌ Upload Failed: " . $e->getMessage() . "</div>";
+        $_SESSION['message'] = "<div class='message error'>âŒ Upload Failed: " . $e->getMessage() . "</div>";
         return false;
     }
 }
@@ -908,661 +903,8 @@ if (in_array($user_role, ['Admin', 'Moderator'])) {
         <span id="update-message">New orders available! Click to refresh.</span>
     </div>
 
-    <?php include __DIR__ . '/includes/navbar.php'; ?>
-
-<div class="page-content">
-
-        <h1>Order Management</h1>
-        
-        <?php if (!empty($message)) echo $message; ?>
-        
-        <?php if ($user_role === 'Branch'): ?>
-        <div class="message info" style="background: #e8f5e9; border-color: #c8e6c9; color: #2e7d32;">
-            <strong>💡 Need to place an order?</strong> Click the <strong>"📋 Order Here - Place New Order"</strong> button below to create your batch order!
-        </div>
-        <?php endif; ?>
-
-        <div class="filter-bar">
-            <div class="filter-group">
-                <label for="status-filter">Status</label>
-                <select id="status-filter" name="status" onchange="window.location.href = this.value;">
-                    <?php
-                    $statuses = ['all' => 'All Orders', 'pending' => 'Pending', 'approved' => 'Approved', 'delivered' => 'Delivered', 'denied' => 'Denied', 'cancelled' => 'Cancelled'];
-                    $base_url = "orders.php?";
-                    $query_params = [];
-                    if ($branch_filter !== 'all') $query_params['branch'] = $branch_filter;
-
-                    foreach ($statuses as $key => $value) {
-                        $query_params['status'] = $key;
-                        $url = $base_url . http_build_query($query_params);
-                        $selected = ($status_filter == $key) ? 'selected' : '';
-                        echo "<option value=\"$url\" $selected>" . htmlspecialchars($value) . "</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-
-            <?php if (in_array($user_role, ['Admin', 'Moderator'])): ?>
-            <div class="filter-group">
-                <label for="branch-filter">Branch</label>
-                <select id="branch-filter" name="branch" onchange="window.location.href = this.value;">
-                    <?php
-                    $query_params = [];
-                    if ($status_filter !== 'all') $query_params['status'] = $status_filter;
-                    
-                    $query_params['branch'] = 'all';
-                    $url = $base_url . http_build_query($query_params);
-                    $selected = ($branch_filter == 'all') ? 'selected' : '';
-                    echo "<option value=\"$url\" $selected>All Branches</option>";
-                    
-                    foreach ($branches as $branch) {
-                        $query_params['branch'] = $branch['user_ID'];
-                        $url = $base_url . http_build_query($query_params);
-                        $selected = ($branch_filter == $branch['user_ID']) ? 'selected' : '';
-                        echo "<option value=\"$url\" $selected>" . htmlspecialchars($branch['name']) . "</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-            <?php endif; ?>
-
-            <?php if ($user_role === 'Branch'): ?>
-            <div class="filter-group" style="margin-left: auto;">
-                 <label>&nbsp;</label>
-                <button id="new-order-btn" class="btn btn-primary" style="font-size: 1.1em; padding: 10px 20px;">
-                    📋 Order Here - Place New Order
-                </button>
-            </div>
-            <?php endif; ?>
-        </div>
-        
-        <?php if (empty($batches)): ?>
-            <div class="message info" id="no-orders-message">No orders found for the selected filters.</div>
-        <?php endif; ?>
-        
-        <!-- Container for dynamically loaded batches -->
-        <div id="batches-container">
-        <?php foreach ($batches as $batch):
-            $batch_key = $batch['branch_ID'] . "_" . $batch['order_date'];
-            $batch_items = $orders[$batch_key] ?? [];
-        ?>
-            <div class="batch-card" data-batch-key="<?= htmlspecialchars($batch_key) ?>">
-                <div class="batch-header">
-                    <h3>
-                        <?= htmlspecialchars($batch['branch_name']) ?>
-                        <span>(Batch from: <?= htmlspecialchars(date('M j, Y g:i A', strtotime($batch['order_date']))) ?>)</span>
-                    </h3>
-                    <div class="batch-actions">
-                    
-                        <?php if ($user_role === 'Branch' && $batch['is_batch_pending']): ?>
-                            <form method="post" action="orders.php" style="display:inline;" data-confirm="Cancel this entire batch order? This cannot be undone.">
-                                <input type="hidden" name="batch_branch_id" value="<?= $batch['branch_ID'] ?>">
-                                <input type="hidden" name="batch_date" value="<?= htmlspecialchars($batch['order_date']) ?>">
-                                <button type="submit" name="cancel_batch" class="btn btn-cancel">Cancel Batch</button>
-                            </form>
-                        <?php endif; ?>
-
-                        <?php if (in_array($user_role, ['Admin', 'Moderator']) && $batch['is_batch_pending']): ?>
-                            <form method="post" action="orders.php" style="display:inline;" data-confirm="Approve ALL pending items for <?= htmlspecialchars(addslashes($batch['branch_name'])) ?> from <?= date('M j H:i', strtotime($batch['order_date'])) ?>? This deducts stock.">
-                                <input type="hidden" name="batch_branch_id" value="<?= $batch['branch_ID'] ?>">
-                                <input type="hidden" name="batch_date" value="<?= htmlspecialchars($batch['order_date']) ?>">
-                                <button type="submit" name="approve_batch" class="btn btn-approve">Approve Batch</button>
-                            </form>
-                            <form method="post" action="orders.php" style="display:inline;" data-confirm="Deny ALL pending items for <?= htmlspecialchars(addslashes($batch['branch_name'])) ?> from <?= date('M j H:i', strtotime($batch['order_date'])) ?>?">
-                                <input type="hidden" name="batch_branch_id" value="<?= $batch['branch_ID'] ?>">
-                                <input type="hidden" name="batch_date" value="<?= htmlspecialchars($batch['order_date']) ?>">
-                                <button type="submit" name="deny_batch" class="btn btn-deny">Deny Batch</button>
-                            </form>
-                        <?php endif; ?>
-                        
-                        <?php if (in_array($user_role, ['Admin', 'Delivery']) && $batch['has_approved'] && !$batch['all_items_delivered']): ?>
-                            <form method="post" action="orders.php" class="batch-delivery-form" enctype="multipart/form-data" data-confirm="Mark ALL approved items in this batch as Delivered?">
-                                <input type="hidden" name="batch_branch_id" value="<?= $batch['branch_ID'] ?>">
-                                <input type="hidden" name="batch_date" value="<?= htmlspecialchars($batch['order_date']) ?>">
-                                <div>
-                                    <label for="proof_<?= $batch_key ?>" style="font-size: 0.8em; font-weight: bold; color: #c0392b;">Proof Image (Required)*:</label>
-                                    <input type="file" name="delivery_proof" id="proof_<?= $batch_key ?>" required>
-                                </div>
-                                <button type="submit" name="deliver_batch" class="btn btn-deliver">Mark as Delivered</button>
-                            </form>
-                        <?php endif; ?>
-
-                        <?php if ($batch['receipt_ID'] && $user_role !== 'Delivery'): ?>
-                            <a href="receipt.php?receipt_id=<?= $batch['receipt_ID'] ?>" class="btn btn-view">View Receipt</a>
-                        <?php endif; ?>
-                        
-                    </div>
-                </div>
-                
-                <div class="batch-body batch-body-scrollable">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th style="min-width: 70px;">Order ID</th>
-                                    <th style="min-width: 180px;">Product</th>
-                                    <th style="min-width: 80px;">Qty</th>
-                                    <?php if (in_array($user_role, ['Admin', 'Moderator'])): ?>
-                                        <th style="min-width: 80px;">Stock</th>
-                                    <?php endif; ?>
-                                    <th style="min-width: 100px;">Total Price</th>
-                                    <th style="min-width: 110px;">Status</th>
-                                    <th style="min-width: 180px;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($batch_items as $item): ?>
-                                    <tr>
-                                        <td><?= $item['order_ID'] ?></td>
-                                        <td><?= htmlspecialchars($item['product_name']) ?></td>
-                                        <td><?= $item['quantity'] ?></td>
-                                        <?php if (in_array($user_role, ['Admin', 'Moderator'])): ?>
-                                            <td><?= $item['stock'] ?></td>
-                                        <?php endif; ?>
-                                        <td>₱<?= number_format($item['total_price'], 2) ?></td>
-                                        <td><span class="status-badge status-<?= strtoupper($item['status']) ?>"><?= htmlspecialchars($item['status']) ?></span></td>
-                                        <td>
-                                            <?php if ($item['status'] === 'Pending' && in_array($user_role, ['Admin', 'Moderator'])): ?>
-                                                <form method="post" action="orders.php" style="display:inline;" data-confirm="Approve order #<?= $item['order_ID'] ?>? This deducts stock.">
-                                                    <input type="hidden" name="order_ID" value="<?= $item['order_ID'] ?>">
-                                                    <button type="submit" name="approve_order" class="btn btn-approve">Approve</button>
-                                                </form>
-                                                <form method="post" action="orders.php" style="display:inline;" data-confirm="Deny order #<?= $item['order_ID'] ?>?">
-                                                    <input type="hidden" name="order_ID" value="<?= $item['order_ID'] ?>">
-                                                    <button type="submit" name="deny_order" class="btn btn-deny">Deny</button>
-                                                </form>
-                                            <?php endif; ?>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                                <tr class="batch-total-row">
-                                    <?php
-                                        $first_colspan = in_array($user_role, ['Admin', 'Moderator']) ? 4 : 3;
-                                        $second_colspan = 3;
-                                    ?>
-                                    <td colspan="<?= $first_colspan ?>">Batch Total:</td>
-                                    <td colspan="<?= $second_colspan ?>">₱<?= number_format($batch['batch_total'], 2) ?></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                </div>
-
-            </div>
-        <?php endforeach; ?>
-        </div>
-        
-        <div class="pagination">
-            <?php
-            $query_params = [];
-            if ($status_filter !== 'pending') $query_params['status'] = $status_filter;
-            if ($branch_filter !== 'all') $query_params['branch'] = $branch_filter;
-
-            if ($page > 1) {
-                $query_params['page'] = $page - 1;
-                echo '<a href="orders.php?' . http_build_query($query_params) . '">&laquo; Previous</a>';
-            } else {
-                echo '<span class="disabled">&laquo; Previous</span>';
-            }
-
-            $window = 2;
-            for ($i = 1; $i <= $total_pages; $i++) {
-                if ($i == 1 || $i == $total_pages || ($i >= $page - $window && $i <= $page + $window)) {
-                    if ($i == $page) {
-                        echo '<span class="current">' . $i . '</span>';
-                    } else {
-                        $query_params['page'] = $i;
-                        echo '<a href="orders.php?' . http_build_query($query_params) . '">' . $i . '</a>';
-                    }
-                } elseif ($i == $page - $window - 1 || $i == $page + $window + 1) {
-                    echo '<span>...</span>';
-                }
-            }
-
-            if ($page < $total_pages) {
-                $query_params['page'] = $page + 1;
-                echo '<a href="orders.php?' . http_build_query($query_params) . '">Next &raquo;</a>';
-            } else {
-                echo '<span class="disabled">Next &raquo;</span>';
-            }
-            ?>
-        </div>
-
-    </div>
-
-    <?php if ($user_role === 'Branch'): ?>
-    <div id="new-order-modal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" id="modal-close-btn">&times;</span>
-            <h3>Place New Batch Order</h3>
-            <!-- Show the branch name -->
-            <p style="text-align: center; font-size: 1.1em; color: #333; margin-top: -10px; margin-bottom: 15px;">
-                Ordering for: <strong><?= htmlspecialchars($_SESSION['name'] ?? 'Your Branch') ?></strong>
-            </p>
-            
-            <div class="add-item-controls">
-                <select id="product-select">
-                    <option value="">Select a product...</option>
-                </select>
-                <input type="number" id="product-quantity" min="1" value="1" style="max-width: 100px;">
-                <button id="add-item-btn" class="btn btn-primary">Add Item</button>
-            </div>
-            
-            <div id="order-items-table-container">
-                <table id="order-items-table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th style="text-align: right;">Price</th>
-                            <th style="text-align: right;">Quantity</th>
-                            <th style="text-align: right;">Subtotal</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="order-items-tbody">
-                    </tbody>
-                </table>
-            </div>
-            
-            <div id="modal-total-display">
-                Total: ₱0.00
-            </div>
-
-            <form method="post" action="orders.php" id="place-order-form">
-                <input type="hidden" name="order_items_json" id="order-items-json">
-                <div class="modal-footer">
-                    <button type="button" id="modal-cancel-btn" class="btn btn-cancel">Cancel</button>
-                    <button type="submit" name="place_batch_order" class="btn btn-approve">Place Batch Order</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <?php endif; ?>
-
-    <script>
-        // NEW: Auto-update functionality with live data injection
-        let lastCheckTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
-        let updateCheckInterval = null;
-        const userRole = '<?= $user_role ?>';
-        const currentStatusFilter = '<?= $status_filter ?>';
-        const currentBranchFilter = '<?= $branch_filter ?>';
-        
-        function fetchAndUpdateOrders() {
-            const params = new URLSearchParams({
-                action: 'fetch_orders',
-                status: currentStatusFilter,
-                branch: currentBranchFilter
-            });
-            
-            fetch(`orders.php?${params}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        console.error('Error:', data.error);
-                        return;
-                    }
-                    
-                    updateOrdersDisplay(data);
-                    lastCheckTime = data.current_time;
-                })
-                .catch(error => {
-                    console.error('Error fetching orders:', error);
-                });
-        }
-        
-        function updateOrdersDisplay(data) {
-            const container = document.getElementById('batches-container');
-            const noOrdersMsg = document.getElementById('no-orders-message');
-            
-            if (data.batches.length === 0) {
-                container.innerHTML = '';
-                if (noOrdersMsg) {
-                    noOrdersMsg.style.display = 'block';
-                }
-                return;
-            }
-            
-            if (noOrdersMsg) {
-                noOrdersMsg.style.display = 'none';
-            }
-            
-            // Build HTML for all batches
-            let html = '';
-            data.batches.forEach(batch => {
-                const batchKey = `${batch.branch_ID}_${batch.order_date}`;
-                const batchOrders = data.orders[batchKey] || [];
-                
-                html += buildBatchHTML(batch, batchOrders, batchKey);
-            });
-            
-            // Check if content has changed before updating
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            
-            if (container.innerHTML !== html) {
-                container.innerHTML = html;
-                // Re-attach event listeners after updating DOM
-                attachFormListeners();
-            }
-        }
-        
-        function buildBatchHTML(batch, orders, batchKey) {
-            const orderDate = new Date(batch.order_date);
-            const formattedDate = orderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + 
-                                  orderDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-            
-            let html = `<div class="batch-card" data-batch-key="${escapeHtml(batchKey)}">
-                <div class="batch-header">
-                    <h3>
-                        ${escapeHtml(batch.branch_name)}
-                        <span>(Batch from: ${formattedDate})</span>
-                    </h3>
-                    <div class="batch-actions">`;
-            
-            // Branch cancel button
-            if (userRole === 'Branch' && batch.is_batch_pending == 1) {
-                html += `<form method="post" action="orders.php" style="display:inline;" data-confirm="Cancel this entire batch order? This cannot be undone.">
-                    <input type="hidden" name="batch_branch_id" value="${batch.branch_ID}">
-                    <input type="hidden" name="batch_date" value="${escapeHtml(batch.order_date)}">
-                    <button type="submit" name="cancel_batch" class="btn btn-cancel">Cancel Batch</button>
-                </form>`;
-            }
-            
-            // Admin/Moderator approve/deny buttons
-            if ((userRole === 'Admin' || userRole === 'Moderator') && batch.is_batch_pending == 1) {
-                html += `<form method="post" action="orders.php" style="display:inline;" data-confirm="Approve ALL pending items for ${escapeHtml(batch.branch_name)}? This deducts stock.">
-                    <input type="hidden" name="batch_branch_id" value="${batch.branch_ID}">
-                    <input type="hidden" name="batch_date" value="${escapeHtml(batch.order_date)}">
-                    <button type="submit" name="approve_batch" class="btn btn-approve">Approve Batch</button>
-                </form>
-                <form method="post" action="orders.php" style="display:inline;" data-confirm="Deny ALL pending items for ${escapeHtml(batch.branch_name)}?">
-                    <input type="hidden" name="batch_branch_id" value="${batch.branch_ID}">
-                    <input type="hidden" name="batch_date" value="${escapeHtml(batch.order_date)}">
-                    <button type="submit" name="deny_batch" class="btn btn-deny">Deny Batch</button>
-                </form>`;
-            }
-            
-            // Delivery button
-            if ((userRole === 'Admin' || userRole === 'Delivery') && batch.has_approved == 1 && batch.all_items_delivered == 0) {
-                html += `<form method="post" action="orders.php" class="batch-delivery-form" enctype="multipart/form-data" data-confirm="Mark ALL approved items in this batch as Delivered?">
-                    <input type="hidden" name="batch_branch_id" value="${batch.branch_ID}">
-                    <input type="hidden" name="batch_date" value="${escapeHtml(batch.order_date)}">
-                    <div>
-                        <label for="proof_${batchKey}" style="font-size: 0.8em; font-weight: bold; color: #c0392b;">Proof Image (Required)*:</label>
-                        <input type="file" name="delivery_proof" id="proof_${batchKey}" required>
-                    </div>
-                    <button type="submit" name="deliver_batch" class="btn btn-deliver">Mark as Delivered</button>
-                </form>`;
-            }
-            
-            // View receipt button
-            if (batch.receipt_ID && userRole !== 'Delivery') {
-                html += `<a href="receipt.php?receipt_id=${batch.receipt_ID}" class="btn btn-view">View Receipt</a>`;
-            }
-            
-            html += `</div></div><div class="batch-body batch-body-scrollable"><table><thead><tr>
-                <th style="min-width: 70px;">Order ID</th>
-                <th style="min-width: 180px;">Product</th>
-                <th style="min-width: 80px;">Qty</th>`;
-            
-            if (userRole === 'Admin' || userRole === 'Moderator') {
-                html += `<th style="min-width: 80px;">Stock</th>`;
-            }
-            
-            html += `<th style="min-width: 100px;">Total Price</th>
-                <th style="min-width: 110px;">Status</th>
-                <th style="min-width: 180px;">Actions</th>
-            </tr></thead><tbody>`;
-            
-            // Order items
-            orders.forEach(item => {
-                html += `<tr>
-                    <td>${item.order_ID}</td>
-                    <td>${escapeHtml(item.product_name)}</td>
-                    <td>${item.quantity}</td>`;
-                
-                if (userRole === 'Admin' || userRole === 'Moderator') {
-                    html += `<td>${item.stock}</td>`;
-                }
-                
-                html += `<td>₱${parseFloat(item.total_price).toFixed(2)}</td>
-                    <td><span class="status-badge status-${item.status.toUpperCase()}">${escapeHtml(item.status)}</span></td>
-                    <td>`;
-                
-                if (item.status === 'Pending' && (userRole === 'Admin' || userRole === 'Moderator')) {
-                    html += `<form method="post" action="orders.php" style="display:inline;" data-confirm="Approve order #${item.order_ID}? This deducts stock.">
-                        <input type="hidden" name="order_ID" value="${item.order_ID}">
-                        <button type="submit" name="approve_order" class="btn btn-approve">Approve</button>
-                    </form>
-                    <form method="post" action="orders.php" style="display:inline;" data-confirm="Deny order #${item.order_ID}?">
-                        <input type="hidden" name="order_ID" value="${item.order_ID}">
-                        <button type="submit" name="deny_order" class="btn btn-deny">Deny</button>
-                    </form>`;
-                }
-                
-                html += `</td></tr>`;
-            });
-            
-            // Total row
-            const firstColspan = (userRole === 'Admin' || userRole === 'Moderator') ? 4 : 3;
-            html += `<tr class="batch-total-row">
-                <td colspan="${firstColspan}">Batch Total:</td>
-                <td colspan="3">₱${parseFloat(batch.batch_total).toFixed(2)}</td>
-            </tr></tbody></table></div></div>`;
-            
-            return html;
-        }
-        
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        function attachFormListeners() {
-            const allForms = document.querySelectorAll('form:not(#place-order-form)');
-            
-            allForms.forEach(form => {
-                form.removeEventListener('submit', handleFormSubmit); // Remove old listeners
-                form.addEventListener('submit', handleFormSubmit);
-            });
-        }
-        
-        function handleFormSubmit(e) {
-            const confirmMessage = this.dataset.confirm;
-            if (confirmMessage) {
-                if (!confirm(confirmMessage)) {
-                    e.preventDefault();
-                    return false;
-                }
-            }
-        }
-        
-        // Start polling every 5 seconds
-        function startAutoUpdate() {
-            updateCheckInterval = setInterval(fetchAndUpdateOrders, 60000);
-        }
-        
-        // Stop polling (useful when modal is open)
-        function stopAutoUpdate() {
-            if (updateCheckInterval) {
-                clearInterval(updateCheckInterval);
-                updateCheckInterval = null;
-            }
-        }
-        
-        // Start auto-update when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            startAutoUpdate();
-            attachFormListeners(); // Attach to initial forms
-            
-            const hamburgerButton = document.getElementById('hamburger-button');
-            const navLinks = document.getElementById('main-nav-links');
-
-            if (hamburgerButton && navLinks) {
-                hamburgerButton.addEventListener('click', function() {
-                    navLinks.classList.toggle('show-menu');
-                });
-            }
-
-            <?php if ($user_role === 'Branch'): ?>
-            const modal = document.getElementById('new-order-modal');
-            const newOrderBtn = document.getElementById('new-order-btn');
-            const closeBtn = document.getElementById('modal-close-btn');
-            const cancelBtn = document.getElementById('modal-cancel-btn');
-            
-            const productSelect = document.getElementById('product-select');
-            const quantityInput = document.getElementById('product-quantity');
-            const addItemBtn = document.getElementById('add-item-btn');
-            const orderTbody = document.getElementById('order-items-tbody');
-            const totalDisplay = document.getElementById('modal-total-display');
-            const orderForm = document.getElementById('place-order-form');
-            const orderJsonInput = document.getElementById('order-items-json');
-
-            let productsData = [];
-            let currentOrder = [];
-
-            if (newOrderBtn) {
-                newOrderBtn.addEventListener('click', function() {
-                    modal.style.display = 'flex';
-                    fetchProducts();
-                    stopAutoUpdate(); // Stop polling while modal is open
-                });
-            }
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => {
-                    modal.style.display = 'none';
-                    startAutoUpdate(); // Resume polling
-                });
-            }
-            if (cancelBtn) {
-                cancelBtn.addEventListener('click', () => {
-                    modal.style.display = 'none';
-                    startAutoUpdate(); // Resume polling
-                });
-            }
-            window.addEventListener('click', function(event) {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                    startAutoUpdate(); // Resume polling
-                }
-            });
-
-            function fetchProducts() {
-                if (productsData.length === 0) {
-                    fetch('orders.php?action=fetch_products')
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.error) {
-                                alert('Error fetching products: ' + data.error);
-                            } else {
-                                productsData = data.products;
-                                populateProductSelect();
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Fetch error:', error);
-                            alert('Failed to load product list. Please try again.');
-                        });
-                }
-            }
-
-            function populateProductSelect() {
-                productSelect.innerHTML = '<option value="">Select a product...</option>';
-                productsData.forEach(product => {
-                    productSelect.innerHTML += `<option value="${product.product_ID}" data-price="${product.price}">${product.product_name} (₱${product.price})</option>`;
-                });
-            }
-
-            if (addItemBtn) {
-                addItemBtn.addEventListener('click', function() {
-                    const selectedOption = productSelect.options[productSelect.selectedIndex];
-                    if (!selectedOption.value) {
-                        alert('Please select a product.');
-                        return;
-                    }
-                    const id = parseInt(selectedOption.value);
-                    const name = selectedOption.text.split(' (₱')[0];
-                    const price = parseFloat(selectedOption.dataset.price);
-                    const quantity = parseInt(quantityInput.value);
-
-                    if (isNaN(quantity) || quantity < 1) {
-                        alert('Please enter a valid quantity.');
-                        return;
-                    }
-
-                    const existingItem = currentOrder.find(item => item.id === id);
-                    if (existingItem) {
-                        existingItem.quantity += quantity;
-                    } else {
-                        currentOrder.push({ id, name, price, quantity });
-                    }
-                    
-                    renderOrderTable();
-                    updateTotal();
-                    
-                    productSelect.value = '';
-                    quantityInput.value = '1';
-                });
-            }
-
-            function renderOrderTable() {
-                orderTbody.innerHTML = '';
-                if (currentOrder.length === 0) {
-                    orderTbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No items added yet.</td></tr>';
-                    return;
-                }
-                
-                currentOrder.forEach((item, index) => {
-                    const subtotal = item.price * item.quantity;
-                    const row = `
-                        <tr>
-                            <td>${item.name}</td>
-                            <td style="text-align: right;">₱${item.price.toFixed(2)}</td>
-                            <td style="text-align: right;">${item.quantity}</td>
-                            <td style="text-align: right;">₱${subtotal.toFixed(2)}</td>
-                            <td style="text-align: center;">
-                                <button type="button" class="btn-remove-item" data-index="${index}">&times;</button>
-                            </td>
-                        </tr>
-                    `;
-                    orderTbody.innerHTML += row;
-                });
-
-                document.querySelectorAll('.btn-remove-item').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const indexToRemove = parseInt(this.dataset.index);
-                        currentOrder.splice(indexToRemove, 1);
-                        renderOrderTable();
-                        updateTotal();
-                    });
-                });
-            }
-
-            function updateTotal() {
-                const total = currentOrder.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-                totalDisplay.textContent = `Total: ₱${total.toFixed(2)}`;
-            }
-
-            if (orderForm) {
-                orderForm.addEventListener('submit', function(e) {
-                    if (currentOrder.length === 0) {
-                        e.preventDefault();
-                        alert('Cannot place an order with no items. Please add products to the order.');
-                        return;
-                    }
-                    orderJsonInput.value = JSON.stringify(currentOrder);
-                    startAutoUpdate(); // Resume polling after submission
-                });
-            }
-            
-            renderOrderTable();
-            <?php endif; ?>
-        });
-        
-        // Stop polling when user leaves the page
-        window.addEventListener('beforeunload', function() {
-            stopAutoUpdate();
-        });
-    </script>
+    <?php include_role_navbar(); ?>
+    <?php include_role_view('orders'); ?>
 
 </body>
 </html>

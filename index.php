@@ -15,7 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username_or_email = $_POST['username_or_email'] ?? '';
     $password = $_POST['password'] ?? ''; // Plain text password from form
 
-    if (empty($username_or_email) || empty($password)) {
+    if (!$conn instanceof mysqli) {
+        $error = "Database is unavailable. Ensure MySQL is running and import database/gabsdatabase.sql if needed.";
+    } elseif (empty($username_or_email) || empty($password)) {
         $error = "Username/Email and Password are required.";
     } else {
         // --- 1. Find the User by username OR email ---

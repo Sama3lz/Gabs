@@ -22,12 +22,7 @@ $current_page = basename($_SERVER['PHP_SELF']); // For navbar and sub-nav active
 
 // --- Page Variables & Navbar Logic (Copied from ingredienthistory.php) ---
 $page_title = "Receipts - Gab's Bakeshop"; // Updated title
-$nav = get_nav_permissions($user_role);
-$show_inventory_link = $nav['show_inventory_link'];
-$show_reports_link = $nav['show_reports_link'];
-$show_accounts_link = $nav['show_accounts_link'];
-$show_orders_link = $nav['show_orders_link'];
-$show_settings_link = $nav['show_settings_link'];
+apply_nav_permissions($user_role);
 
 // --- DETERMINE MODE: ARCHIVE or DETAIL ---
 $is_detail_view = isset($_GET['receipt_id']);
@@ -238,7 +233,7 @@ else {
     </div>
 
     <!-- ****** EMBEDDED Navbar HTML ****** -->
-    <?php include __DIR__ . '/includes/navbar.php'; ?>
+    <?php include_role_navbar(); ?>
 
 <div class="page-content">
 

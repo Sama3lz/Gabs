@@ -35,12 +35,7 @@ if (isset($_SESSION['message'])) {
 $page_title = "User Settings - Gab's Bakeshop";
 $current_page = basename($_SERVER['PHP_SELF']);
 
-$nav = get_nav_permissions($user_role);
-$show_inventory_link = $nav['show_inventory_link'];
-$show_reports_link = $nav['show_reports_link'];
-$show_accounts_link = $nav['show_accounts_link'];
-$show_orders_link = $nav['show_orders_link'];
-$show_settings_link = $nav['show_settings_link'];
+apply_nav_permissions($user_role);
 
 
 // --- 4. Fetch current user data ---
@@ -190,73 +185,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
 </head>
 <body>
     <!-- ****** EMBEDDED Navbar HTML ****** -->
-    <?php include __DIR__ . '/includes/navbar.php'; ?>
-
-<div class="page-content">
-        <h1>User Settings</h1>
-
-        <?php
-            // Display messages (ensure they are wrapped)
-             if (!empty($msg) && strpos($msg, '<div') === false) { echo "<div class='message success'>" . htmlspecialchars($msg) . "</div>"; } elseif (!empty($msg)) { echo $msg; }
-             if (!empty($error) && strpos($error, '<div') === false) { echo "<div class='message error'>" . htmlspecialchars($error) . "</div>"; } elseif (!empty($error)) { echo $error; }
-        ?>
-
-        <div class="form-section">
-            <h2>Personal Profile Details</h2>
-            <form method="POST" action="settings.php">
-                <label for="new_name">Display Name:</label>
-                <input type="text" id="new_name" name="new_name" value="<?= htmlspecialchars($user_data['name'] ?? '') ?>" required>
-
-                <label for="new_username">Username:</label>
-                <input type="text" id="new_username" name="new_username" value="<?= htmlspecialchars($user_data['username'] ?? '') ?>" required>
-
-                <?php // Email is usually shown but not editable
-                if (!empty($user_data['email'])): ?>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="<?= htmlspecialchars($user_data['email'] ?? '') ?>" readonly disabled title="Email cannot be changed here">
-                <?php endif; ?>
-
-
-                <?php if (in_array($user_role, ['Branch', 'Admin'])): // Location only visible/editable for relevant roles ?>
-                    <label for="new_location">Location/Branch Name:</label>
-                    <input type="text" id="new_location" name="new_location" value="<?= htmlspecialchars($user_data['Location'] ?? '') ?>">
-                <?php endif; ?>
-
-                <button type="submit" name="update_profile">Update Profile Details</button>
-            </form>
-        </div>
-
-        <div class="form-section">
-            <h2>Change Password</h2>
-             <!-- Removed paragraph about leaving fields blank as it's less relevant for plain text check -->
-            <form method="POST" action="settings.php">
-                <label for="current_password">Current Password:</label>
-                <input type="password" id="current_password" name="current_password" required>
-
-                <label for="new_password">New Password:</label>
-                <input type="password" id="new_password" name="new_password" required pattern=".{8,}" title="Password must be at least 8 characters long">
-
-                <label for="confirm_password">Confirm New Password:</label>
-                <input type="password" id="confirm_password" name="confirm_password" required>
-
-                <button type="submit" name="change_password">Change Password</button>
-            </form>
-        </div>
-    </div> <!-- /page-content -->
-
-    <!-- ****** EMBEDDED JavaScript for Hamburger Menu ****** -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const hamburgerButton = document.getElementById('hamburger-button');
-            const navLinks = document.getElementById('main-nav-links');
-
-            if (hamburgerButton && navLinks) {
-                hamburgerButton.addEventListener('click', function() {
-                    navLinks.classList.toggle('show-menu');
-                });
-            }
-        });
-    </script>
+    <?php include_role_navbar(); ?>
+    <?php include_role_view('settings'); ?>
+    <?php include_hamburger_script(); ?>
 
 </body>
 </html>

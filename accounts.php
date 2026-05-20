@@ -34,12 +34,7 @@ if (isset($_SESSION['message'])) {
 $page_title = "Account Management - Gab's Bakeshop";
 $current_page = basename($_SERVER['PHP_SELF']);
 
-$nav = get_nav_permissions($user_role_session);
-$show_inventory_link = $nav['show_inventory_link'];
-$show_reports_link = $nav['show_reports_link'];
-$show_accounts_link = $nav['show_accounts_link'];
-$show_orders_link = $nav['show_orders_link'];
-$show_settings_link = $nav['show_settings_link'];
+apply_nav_permissions($user_role_session);
 
 
 // --- Helper function to get Role ID ---
@@ -278,7 +273,7 @@ $users_result = $conn->query($sql_users);
 </head>
 <body>
     <!-- Navbar -->
-    <?php include __DIR__ . '/includes/navbar.php'; ?>
+    <?php include_role_navbar(); ?>
 
 <div class="page-content">
     <h1>Account Management</h1>
